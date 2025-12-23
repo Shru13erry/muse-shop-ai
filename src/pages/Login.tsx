@@ -9,11 +9,12 @@ import { Sparkles, Mail, Lock, User as UserIcon } from "lucide-react";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate login
+    // Simulate login/signup
     setTimeout(() => setIsLoading(false), 1500);
   };
   
@@ -30,24 +31,26 @@ const Login = () => {
             </span>
           </Link>
           <p className="text-muted-foreground">
-            Welcome back! Sign in to continue shopping.
+            {authMode === "signin" 
+              ? "Welcome back! Sign in to buy & sell." 
+              : "Create your account to start shopping & selling."}
           </p>
         </div>
         
-        <Tabs defaultValue="buyer" className="w-full">
+        <Tabs value={authMode} onValueChange={(v) => setAuthMode(v as "signin" | "signup")} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="buyer">Buyer</TabsTrigger>
-            <TabsTrigger value="seller">Seller</TabsTrigger>
+            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="buyer" className="space-y-4 mt-6">
+          <TabsContent value="signin" className="space-y-4 mt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="buyer-email">Email</Label>
+                <Label htmlFor="signin-email">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="buyer-email"
+                    id="signin-email"
                     type="email"
                     placeholder="you@example.com"
                     className="pl-10"
@@ -57,11 +60,11 @@ const Login = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="buyer-password">Password</Label>
+                <Label htmlFor="signin-password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="buyer-password"
+                    id="signin-password"
                     type="password"
                     placeholder="••••••••"
                     className="pl-10"
@@ -75,29 +78,23 @@ const Login = () => {
               </Button>
             </form>
             
-            <div className="text-center space-y-2">
+            <div className="text-center">
               <Button variant="link" className="text-sm">
                 Forgot password?
               </Button>
-              <p className="text-sm text-muted-foreground">
-                Don't have an account?{" "}
-                <Button variant="link" className="p-0 h-auto">
-                  Sign up
-                </Button>
-              </p>
             </div>
           </TabsContent>
           
-          <TabsContent value="seller" className="space-y-4 mt-6">
+          <TabsContent value="signup" className="space-y-4 mt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="seller-email">Business Email</Label>
+                <Label htmlFor="signup-name">Full Name</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <UserIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="seller-email"
-                    type="email"
-                    placeholder="business@example.com"
+                    id="signup-name"
+                    type="text"
+                    placeholder="John Doe"
                     className="pl-10"
                     required
                   />
@@ -105,11 +102,25 @@ const Login = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="seller-password">Password</Label>
+                <Label htmlFor="signup-email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="signup-email"
+                    type="email"
+                    placeholder="you@example.com"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="signup-password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
-                    id="seller-password"
+                    id="signup-password"
                     type="password"
                     placeholder="••••••••"
                     className="pl-10"
@@ -119,27 +130,19 @@ const Login = () => {
               </div>
               
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Signing in..." : "Sign In as Seller"}
+                {isLoading ? "Creating account..." : "Create Account"}
               </Button>
             </form>
             
-            <div className="text-center space-y-2">
-              <Button variant="link" className="text-sm">
-                Forgot password?
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                Want to become a seller?{" "}
-                <Button variant="link" className="p-0 h-auto">
-                  Apply now
-                </Button>
-              </p>
-            </div>
+            <p className="text-sm text-center text-muted-foreground">
+              You'll be able to buy <span className="font-medium">and</span> sell items with one account
+            </p>
           </TabsContent>
         </Tabs>
         
         <div className="pt-4 border-t">
           <p className="text-xs text-center text-muted-foreground">
-            By signing in, you agree to our Terms of Service and Privacy Policy
+            By continuing, you agree to our Terms of Service and Privacy Policy
           </p>
         </div>
       </Card>
