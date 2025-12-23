@@ -1,32 +1,61 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, Camera, Sparkles, ShoppingBag } from "lucide-react";
+import { Upload, Camera, Sparkles, ShoppingBag, X, Heart } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { mockProducts } from "@/data/mockProducts";
 
 const ImageSearch = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [results, setResults] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  
+  const processImage = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imageUrl = event.target?.result as string;
+      setUploadedImage(imageUrl);
+      setIsAnalyzing(true);
+      
+      // Simulate AI analysis
+      setTimeout(() => {
+        setIsAnalyzing(false);
+        setResults(true);
+      }, 2000);
+    };
+    reader.readAsDataURL(file);
+  };
   
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    setIsAnalyzing(true);
     
-    // Simulate AI analysis
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setResults(true);
-    }, 2000);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      processImage(file);
+    }
   };
   
-  const mockProducts = [
-    { id: 1, name: "Modern Ceramic Vase", price: "$45", seller: "HomeDecor Co." },
-    { id: 2, name: "Minimalist Table Lamp", price: "$68", seller: "Light Studio" },
-    { id: 3, name: "Designer Wall Art", price: "$120", seller: "Art Gallery" },
-    { id: 4, name: "Organic Cotton Throw", price: "$55", seller: "Textile House" },
-  ];
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processImage(file);
+    }
+  };
+  
+  const handleReset = () => {
+    setUploadedImage(null);
+    setResults(false);
+    setIsAnalyzing(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (cameraInputRef.current) cameraInputRef.current.value = "";
+  };
+  
+  // Get random products for results (simulating AI matching)
+  const matchedProducts = mockProducts.slice(0, 6);
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,11 +73,28 @@ const ImageSearch = () => {
             </p>
           </div>
           
+          {/* Hidden file inputs */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            accept="image/*"
+            className="hidden"
+          />
+          <input
+            type="file"
+            ref={cameraInputRef}
+            onChange={handleFileUpload}
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+          />
+          
           {/* Upload Area */}
-          {!results && (
+          {!results && !isAnalyzing && (
             <Card
-              className={`p-12 border-2 border-dashed transition-all animate-fade-in-up ${
-                isDragging ? "border-primary bg-primary/5" : "border-border"
+              className={`p-12 border-2 border-dashed transition-all animate-fade-in-up cursor-pointer ${
+                isDragging ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
               }`}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -56,96 +102,144 @@ const ImageSearch = () => {
               }}
               onDragLeave={() => setIsDragging(false)}
               onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
             >
               <div className="text-center space-y-6">
-                {isAnalyzing ? (
-                  <>
-                    <div className="animate-pulse">
-                      <Sparkles className="h-16 w-16 text-primary mx-auto" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold">Analyzing your image...</h3>
-                      <p className="text-muted-foreground">
-                        Our AI is finding the best matches for you
-                      </p>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-16 w-16 text-muted-foreground mx-auto" />
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold">
-                        Drag and drop your image here
-                      </h3>
-                      <p className="text-muted-foreground">
-                        or click to browse your files
-                      </p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Button className="gap-2">
-                        <Upload className="h-4 w-4" />
-                        Choose File
-                      </Button>
-                      <Button variant="outline" className="gap-2">
-                        <Camera className="h-4 w-4" />
-                        Take Photo
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Supports: JPG, PNG, WEBP (Max 10MB)
-                    </p>
-                  </>
-                )}
+                <Upload className="h-16 w-16 text-muted-foreground mx-auto" />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">
+                    Drag and drop your image here
+                  </h3>
+                  <p className="text-muted-foreground">
+                    or click to browse your files
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center" onClick={(e) => e.stopPropagation()}>
+                  <Button className="gap-2" onClick={() => fileInputRef.current?.click()}>
+                    <Upload className="h-4 w-4" />
+                    Choose File
+                  </Button>
+                  <Button variant="outline" className="gap-2" onClick={() => cameraInputRef.current?.click()}>
+                    <Camera className="h-4 w-4" />
+                    Take Photo
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Supports: JPG, PNG, WEBP (Max 10MB)
+                </p>
+              </div>
+            </Card>
+          )}
+          
+          {/* Analyzing State */}
+          {isAnalyzing && uploadedImage && (
+            <Card className="p-12 animate-fade-in">
+              <div className="text-center space-y-6">
+                <div className="relative w-48 h-48 mx-auto">
+                  <img 
+                    src={uploadedImage} 
+                    alt="Analyzing" 
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                  <div className="absolute inset-0 bg-primary/20 rounded-lg flex items-center justify-center">
+                    <Sparkles className="h-12 w-12 text-primary animate-pulse" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">Analyzing your image...</h3>
+                  <p className="text-muted-foreground">
+                    Our AI is finding the best matches for you
+                  </p>
+                </div>
+                <div className="flex justify-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                </div>
               </div>
             </Card>
           )}
           
           {/* Results */}
-          {results && (
+          {results && uploadedImage && (
             <div className="space-y-6 animate-fade-in">
+              {/* Uploaded Image Preview */}
+              <Card className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <img 
+                      src={uploadedImage} 
+                      alt="Uploaded" 
+                      className="w-24 h-24 object-cover rounded-lg"
+                    />
+                    <button 
+                      onClick={handleReset}
+                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold">Your uploaded image</h3>
+                    <p className="text-sm text-muted-foreground">
+                      AI found {matchedProducts.length} similar products
+                    </p>
+                  </div>
+                  <Button variant="outline" onClick={handleReset}>
+                    Search New Image
+                  </Button>
+                </div>
+              </Card>
+              
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h2 className="text-2xl font-bold">Similar Products Found</h2>
                   <p className="text-muted-foreground">
-                    AI matched {mockProducts.length} items based on your image
+                    AI matched {matchedProducts.length} items based on your image
                   </p>
                 </div>
-                <Button variant="outline" onClick={() => setResults(false)}>
-                  Search Again
-                </Button>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-6">
-                {mockProducts.map((product, index) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {matchedProducts.map((product, index) => (
                   <Card 
                     key={product.id} 
-                    className="p-6 space-y-4 hover:shadow-[var(--shadow-hover)] transition-all animate-scale-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-                      <ShoppingBag className="h-12 w-12 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="font-semibold text-lg">{product.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <p className="text-2xl font-bold text-primary">{product.price}</p>
-                        <p className="text-sm text-muted-foreground">{product.seller}</p>
+                    <div className="relative aspect-square">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <Button size="icon" variant="secondary" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Heart className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="absolute top-2 left-2 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-xs font-medium">
+                        {Math.floor(Math.random() * 30 + 70)}% Match
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button className="flex-1">View Details</Button>
-                      <Button variant="outline" size="icon">
+                    <div className="p-4 space-y-2">
+                      <h3 className="font-semibold truncate">{product.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-primary">${product.price}</span>
+                        <span className="text-xs text-muted-foreground">{product.seller}</span>
+                      </div>
+                      <Button className="w-full gap-2" size="sm">
                         <ShoppingBag className="h-4 w-4" />
+                        View Product
                       </Button>
                     </div>
                   </Card>
                 ))}
               </div>
               
-              <div className="flex flex-wrap gap-3 justify-center">
-                <Button variant="outline" size="sm">Show More Results</Button>
-                <Button variant="outline" size="sm">Filter by Price</Button>
-                <Button variant="outline" size="sm">Sort by Relevance</Button>
+              <div className="flex justify-center gap-3">
+                <Button variant="outline">Load More Results</Button>
+                <Button variant="outline">Refine Search</Button>
               </div>
             </div>
           )}
