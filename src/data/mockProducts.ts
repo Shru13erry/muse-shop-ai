@@ -7,7 +7,9 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop",
     rating: 4.8,
     reviews: 2341,
-    badge: "Best Seller"
+    badge: "Best Seller",
+    category: "Electronics",
+    seller: "TechSound Co."
   },
   {
     id: 2,
@@ -16,6 +18,8 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=500&fit=crop",
     rating: 4.6,
     reviews: 892,
+    category: "Fashion",
+    seller: "Luxe Leather"
   },
   {
     id: 3,
@@ -25,7 +29,9 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop",
     rating: 4.7,
     reviews: 1543,
-    badge: "Hot Deal"
+    badge: "Hot Deal",
+    category: "Electronics",
+    seller: "FitTech Pro"
   },
   {
     id: 4,
@@ -34,6 +40,8 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500&h=500&fit=crop",
     rating: 4.5,
     reviews: 678,
+    category: "Fashion",
+    seller: "Denim Studio"
   },
   {
     id: 5,
@@ -43,7 +51,9 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&h=500&fit=crop",
     rating: 4.9,
     reviews: 3201,
-    badge: "Top Rated"
+    badge: "Top Rated",
+    category: "Fashion",
+    seller: "Sprint Shoes"
   },
   {
     id: 6,
@@ -52,6 +62,8 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop",
     rating: 4.4,
     reviews: 1087,
+    category: "Electronics",
+    seller: "AudioMax"
   },
   {
     id: 7,
@@ -60,6 +72,8 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&h=500&fit=crop",
     rating: 4.6,
     reviews: 934,
+    category: "Fashion",
+    seller: "EcoWear"
   },
   {
     id: 8,
@@ -69,7 +83,29 @@ export const mockProducts = [
     image: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=500&h=500&fit=crop",
     rating: 4.8,
     reviews: 567,
-    badge: "New Arrival"
+    badge: "New Arrival",
+    category: "Electronics",
+    seller: "PhotoPro Gear"
+  },
+  {
+    id: 9,
+    name: "Modern Ceramic Vase Set",
+    price: 45,
+    image: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=500&h=500&fit=crop",
+    rating: 4.5,
+    reviews: 342,
+    category: "Home",
+    seller: "HomeDecor Co."
+  },
+  {
+    id: 10,
+    name: "Bamboo Kitchen Utensil Set",
+    price: 35,
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=500&fit=crop",
+    rating: 4.7,
+    reviews: 567,
+    category: "Home",
+    seller: "EcoKitchen"
   }
 ];
 
