@@ -1,21 +1,27 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Sparkles, Mail, Lock, User as UserIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const navigate = useNavigate();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate login/signup
-    setTimeout(() => setIsLoading(false), 1500);
+    // Simulate login/signup - accepts any email/password
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success(authMode === "signin" ? "Welcome back!" : "Account created successfully!");
+      navigate("/");
+    }, 1000);
   };
   
   return (
