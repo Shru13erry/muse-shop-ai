@@ -1,11 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ShoppingBag, User, MessageSquare } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, ShoppingBag, User, MessageSquare, Mail } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
   
   const isActive = (path: string) => location.pathname === path;
+  
+  // Mock unread count - in real app this would come from state/context
+  const unreadMessages = 3;
   
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-card/80 backdrop-blur-md">
@@ -16,7 +20,7 @@ const Navbar = () => {
               <Sparkles className="h-5 w-5 text-primary-foreground" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              ShopAI
+              Leijigeilam
             </span>
           </Link>
           
@@ -39,9 +43,37 @@ const Navbar = () => {
               <ShoppingBag className="h-4 w-4" />
               Image Search
             </Link>
+            <Link 
+              to="/messages" 
+              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                isActive("/messages") ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <div className="relative">
+                <Mail className="h-4 w-4" />
+                {unreadMessages > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px]">
+                    {unreadMessages}
+                  </Badge>
+                )}
+              </div>
+              Messages
+            </Link>
           </div>
           
           <div className="flex items-center gap-3">
+            <Link to="/messages" className="md:hidden relative">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <div className="relative">
+                  <Mail className="h-4 w-4" />
+                  {unreadMessages > 0 && (
+                    <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px]">
+                      {unreadMessages}
+                    </Badge>
+                  )}
+                </div>
+              </Button>
+            </Link>
             <Link to="/profile">
               <Button variant="ghost" size="sm" className="gap-2">
                 <User className="h-4 w-4" />

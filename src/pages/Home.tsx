@@ -174,12 +174,12 @@ const Home = () => {
       <footer className="border-t py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-primary" />
-              <span className="font-bold">ShopAI</span>
+              <span className="font-bold">Leijigeilam</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © 2025 ShopAI. Powered by AI. Built with love.
+              © 2025 Leijigeilam. Powered by AI. Built with love.
             </p>
           </div>
         </div>
