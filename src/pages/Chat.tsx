@@ -61,7 +61,7 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm your AI shopping assistant. Describe what you're looking for, and I'll help you find the perfect match. You can also upload an image of something you like!"
+      content: "Hi! I'm your Leijigeilam AI shopping assistant. Describe what you're looking for, and I'll help you find the perfect match. You can also upload an image of something you like!"
     }
   ]);
   const [input, setInput] = useState("");
