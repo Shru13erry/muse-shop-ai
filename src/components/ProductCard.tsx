@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +15,23 @@ interface ProductCardProps {
   badge?: string;
 }
 
-const ProductCard = ({ name, price, originalPrice, image, rating, reviews, badge }: ProductCardProps) => {
+const ProductCard = ({ id, name, price, originalPrice, image, rating, reviews, badge }: ProductCardProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/product/${id}`);
+  };
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Add to cart logic here
+  };
+
   return (
-    <Card className="group overflow-hidden hover:shadow-[var(--shadow-hover)] transition-all hover:-translate-y-1 duration-300">
+    <Card 
+      className="group overflow-hidden hover:shadow-[var(--shadow-hover)] transition-all hover:-translate-y-1 duration-300 cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="relative aspect-square overflow-hidden bg-muted">
         <img 
           src={image} 
@@ -45,7 +60,7 @@ const ProductCard = ({ name, price, originalPrice, image, rating, reviews, badge
               <span className="text-sm text-muted-foreground line-through">${originalPrice}</span>
             )}
           </div>
-          <Button size="sm" variant="secondary" className="gap-2">
+          <Button size="sm" variant="secondary" className="gap-2" onClick={handleCartClick}>
             <ShoppingCart className="h-4 w-4" />
           </Button>
         </div>
