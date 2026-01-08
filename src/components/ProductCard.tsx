@@ -29,8 +29,11 @@ const ProductCard = ({ id, name, price, originalPrice, image, rating, reviews, b
 
   return (
     <Card 
-      className="group overflow-hidden hover:shadow-[var(--shadow-hover)] transition-all hover:-translate-y-1 duration-300 cursor-pointer"
+      className="group overflow-hidden hover:shadow-[var(--shadow-hover)] transition-all hover:-translate-y-1 duration-300 cursor-pointer select-none"
       onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
         <img 
