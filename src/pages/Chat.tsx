@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -58,6 +59,7 @@ const defaultResponse = {
 };
 
 const Chat = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -202,7 +204,8 @@ const Chat = () => {
                       {message.products.map((product) => (
                         <div 
                           key={product.id}
-                          className="bg-background rounded-lg p-2 cursor-pointer hover:shadow-md transition-shadow"
+                          className="bg-background rounded-lg p-2 cursor-pointer hover:shadow-md transition-shadow hover:ring-2 hover:ring-primary/50"
+                          onClick={() => navigate(`/product/${product.id}`)}
                         >
                           <img 
                             src={product.image} 
