@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Upload, Camera, Sparkles, ShoppingBag, X, Heart } from "lucide-react";
@@ -6,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import { mockProducts } from "@/data/mockProducts";
 
 const ImageSearch = () => {
+  const navigate = useNavigate();
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
@@ -206,6 +208,7 @@ const ImageSearch = () => {
                     key={product.id} 
                     className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group animate-fade-in"
                     style={{ animationDelay: `${index * 100}ms` }}
+                    onClick={() => navigate(`/product/${product.id}`)}
                   >
                     <div className="relative aspect-square">
                       <img
@@ -214,7 +217,12 @@ const ImageSearch = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-2 right-2">
-                        <Button size="icon" variant="secondary" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button 
+                          size="icon" 
+                          variant="secondary" 
+                          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Heart className="h-4 w-4" />
                         </Button>
                       </div>
@@ -228,7 +236,7 @@ const ImageSearch = () => {
                         <span className="text-lg font-bold text-primary">${product.price}</span>
                         <span className="text-xs text-muted-foreground">{product.seller}</span>
                       </div>
-                      <Button className="w-full gap-2" size="sm">
+                      <Button className="w-full gap-2" size="sm" onClick={(e) => e.stopPropagation()}>
                         <ShoppingBag className="h-4 w-4" />
                         View Product
                       </Button>
